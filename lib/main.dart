@@ -23,10 +23,13 @@ class _HomeState extends State<Home> {
   var currently;
   var description;
   var wind;
+  var city = "delhi";
 
-  Future getWeather() async {
+  Future getWeather(var city) async {
     http.Response response = await http.get(Uri.parse(
-        "http://api.openweathermap.org/data/2.5/weather?q=delhi&units=metric&appid=3aa9f0e85efd351d791bea6e1622b42c"));
+        "http://api.openweathermap.org/data/2.5/weather?q=" +
+            city.toString() +
+            "&units=metric&appid=3aa9f0e85efd351d791bea6e1622b42c"));
     var results = jsonDecode(response.body);
     setState(() {
       this.temp = results['main']['temp'];
@@ -40,8 +43,10 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    this.getWeather();
+    this.getWeather(this.city);
   }
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext buildContext) {
@@ -56,7 +61,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.only(top: 40.0, bottom: 10.0),
-                    child: Text("Currently in Delhi",
+                    child: Text("Currently in " + city.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
@@ -113,7 +118,34 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
-          ))
+          )),
+          Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                      onChanged: (text) {
+                        this.city = text;
+                      },
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: "Enter a City"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter a city";
+                        }
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        getWeather(city);
+                      },
+                      child: Text("Submit"),
+                    ),
+                  )
+                ],
+              ))
         ],
       ),
     );
