@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -54,9 +54,16 @@ class _HomeState extends State<Home> {
       body: Column(
         children: <Widget>[
           Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: new AssetImage(
+                  DateTime.now().hour < 18 && DateTime.now().hour > 6
+                      ? "images/sunny.jpg"
+                      : "images/night.jpg"),
+              fit: BoxFit.cover,
+            )),
             height: MediaQuery.of(context).size.height / 3,
             width: MediaQuery.of(context).size.width,
-            color: Colors.red,
             child: Column(
               children: <Widget>[
                 Padding(
